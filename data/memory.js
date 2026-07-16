@@ -1,0 +1,138 @@
+[
+    {
+        "role": "user",
+        "content": "Hello, how are you?"
+    },
+    {
+        "role": "assistant",
+        "content": "I'm good, thank you!"
+    },
+    {
+        "role": "user",
+        "content": "hello"
+    },
+    {
+        "role": "assistant",
+        "content": "Hello again! Is there something I can help you with or would you like to chat?"
+    },
+    {
+        "role": "user",
+        "content": "hello my name is raj"
+    },
+    {
+        "role": "assistant",
+        "content": "Nice to meet you, Raj! How's your day going so far?"
+    },
+    {
+        "role": "user",
+        "content": "tell me my name"
+    },
+    {
+        "role": "assistant",
+        "content": "Your name is Raj."
+    },
+    {
+        "role": "user",
+        "content": "what is 2*4"
+    },
+    {
+        "role": "assistant",
+        "content": "The result of 2*4 is 8."
+    },
+    {
+        "role": "user",
+        "content": "Hello, how are you?"
+    },
+    {
+        "role": "assistant",
+        "content": "I'm good, thank you!"
+    },
+    {
+        "role": "user",
+        "content": "hello"
+    },
+    {
+        "role": "assistant",
+        "content": "Hello again!"
+    },
+    {
+        "role": "user",
+        "content": "how are you"
+    },
+    {
+        "role": "assistant",
+        "content": "I'm doing well, thanks for asking!"
+    },
+    {
+        "role": "user",
+        "content": "hello"
+    },
+    {
+        "role": "assistant",
+        "content": "Hello!"
+    },
+    {
+        "role": "user",
+        "content": "5*5"
+    },
+    {
+        "role": "assistant",
+        "content": "The result of 5*5 is 25."
+    },
+    {
+        "role": "user",
+        "content": "59-5"
+    },
+    {
+        "role": "assistant",
+        "content": "The result of 59-5 is 54."
+    },
+    {
+        "role": "user",
+        "content": "hi"
+    },
+    {
+        "role": "assistant",
+        "content": "Hi!"
+    },
+    {
+        "role": "user",
+        "content": "my name is shikhar"
+    },
+    {
+        "role": "assistant",
+        "content": "Nice to meet you, Shikhar!"
+    },
+    {
+        "role": "user",
+        "content": "tell me my name"
+    },
+    {
+        "role": "assistant",
+        "content": "Your name is Shikhar."
+    },
+    {
+        "role": "user",
+        "content": "5-5"
+    },
+    {
+        "role": "assistant",
+        "content": "The result of 5-5 is 0."
+    },
+    {
+        "role": "user",
+        "content": "helo"
+    },
+    {
+        "role": "assistant",
+        "content": "Hello!"
+    },
+    {
+        "role": "user",
+        "content": "5*5"
+    },
+    {
+        "role": "assistant",
+        "content": "The result of 5*5 is 25."
+    }
+]
