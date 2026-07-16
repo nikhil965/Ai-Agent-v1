@@ -1,8 +1,9 @@
+##Manages conversation history and memory so the AI can remember previous interactions.
+
 import json
 import os
 
-# Vercel's project filesystem is read-only at runtime.
-# Only /tmp is writable, so memory is stored there.
+
 MEMORY_FILE = "/tmp/memory.json"
 
 
