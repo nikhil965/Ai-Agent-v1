@@ -1,3 +1,5 @@
+#Stores system prompts, instructions, and prompt templates used to guide the AI's behavior.
+
 SYSTEM_PROMPT = """
 You are a helpful AI Assistant.
 
