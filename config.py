@@ -1,3 +1,5 @@
+##Stores configuration settings such as API keys, model names, URLs, environment variables, and other constants.
+
 import os
 from dotenv import load_dotenv
 load_dotenv()
