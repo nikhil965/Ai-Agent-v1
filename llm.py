@@ -1,3 +1,5 @@
+##Handles communication with the Large Language Model (LLM)
+
 from openai import OpenAI
 from config import API_KEY, BASE_URL, MODEL_NAME
 
