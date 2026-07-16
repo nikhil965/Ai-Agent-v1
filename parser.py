@@ -1,3 +1,5 @@
+##Parses and processes user input or LLM output, converting raw text into a structured format.
+
 import json
 
 
