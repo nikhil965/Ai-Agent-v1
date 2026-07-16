@@ -1,5 +1,3 @@
-##Configuration file used to deploy the application on the Vercel platform. It defines deployment settings and routes.
-
 {
   "version": 2,
   "builds": [
