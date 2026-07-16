@@ -1,3 +1,5 @@
+##Contains external tools or utility functions that the AI can use, such as calculators, web search, file operations, or database access.
+
 import ast
 import operator as op
 import math
