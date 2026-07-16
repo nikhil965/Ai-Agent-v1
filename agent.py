@@ -1,3 +1,4 @@
+##Contains the main AI agent logic. It receives the user's request, decides what to do, calls the LLM, memory, or tools, and generates the final response.
 from llm import chat
 from memory import load_memory, save_memory
 from prompts import SYSTEM_PROMPT
