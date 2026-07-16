@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AGENT // MISSION CONTROL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@500;700;900&display=swap');
+
+  :root{
+    --bg:#040816;
+    --bg-panel:#070d21;
+    --bg-panel2:#0b1330;
+    --cyan:#5fe7ff;
+    --cyan-dim:#1d5a75;
+    --violet:#8a7bff;
+    --amber:#ffb545;
+    --red:#ff5d5d;
+    --text:#d9ecff;
+    --star:#ffffff;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; height:100%; background:var(--bg); overflow:hidden; }
+  body{
+    font-family:'Space Mono', monospace;
+    color:var(--text);
+  }
+
+  /* starfield */
+  #stars{ position:fixed; inset:0; z-index:0; }
+  #stars canvas{ display:block; width:100%; height:100%; }
+
+  .nebula{
+    position:fixed; inset:0; z-index:0;
+    background:
+      radial-gradient(ellipse 60% 40% at 15% 10%, rgba(138,123,255,0.16), transparent 60%),
+      radial-gradient(ellipse 50% 35% at 85% 85%, rgba(95,231,255,0.12), transparent 60%);
+    pointer-events:none;
+  }
+
+  .wrap{
+    position:relative; z-index:2;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    padding:20px;
+  }
+
+  .titlebar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border:1px solid var(--cyan-dim);
+    padding:10px 16px;
+    background:rgba(7,13,33,0.75);
+    backdrop-filter:blur(6px);
+    font-family:'Orbitron', sans-serif;
+    font-size:12px;
+    letter-spacing:2px;
+    color:var(--cyan-dim);
+    border-radius:6px 6px 0 0;
+  }
+  .titlebar .brand{ color:var(--cyan); font-weight:700; text-shadow:0 0 10px rgba(95,231,255,0.6); }
+  .titlebar .status{ display:flex; align-items:center; gap:8px; color:var(--violet); }
+  .pulse{ width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan), 0 0 20px var(--cyan); animation:blink 1.6s infinite; }
+  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+  .term{
+    flex:1;
+    border:1px solid var(--cyan-dim);
+    border-top:none;
+    background:rgba(7,13,33,0.65);
+    backdrop-filter:blur(6px);
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+    border-radius:0 0 6px 6px;
+    box-shadow:0 0 40px rgba(95,231,255,0.06) inset;
+  }
+
+  .log{
+    flex:1;
+    overflow-y:auto;
+    padding:18px 20px;
+    font-size:13.5px;
+    line-height:1.7;
+  }
+  .log::-webkit-scrollbar{ width:8px; }
+  .log::-webkit-scrollbar-thumb{ background:var(--cyan-dim); border-radius:4px; }
+  .log::-webkit-scrollbar-track{ background:transparent; }
+
+  .line{ white-space:pre-wrap; word-break:break-word; margin-bottom:4px; }
+  .tag{ color:var(--cyan-dim); }
+  .you .tag{ color:var(--amber); }
+  .agent{ color:var(--text); }
+  .agent .tag{ color:var(--cyan); text-shadow:0 0 6px rgba(95,231,255,0.5); }
+  .tool{ color:var(--violet); font-size:12.5px; padding-left:16px; opacity:0.85; }
+  .tool .name{ color:var(--amber); }
+  .err{ color:var(--red); }
+  .boot{ color:var(--cyan-dim); }
+
+  .inputbar{
+    border-top:1px solid var(--cyan-dim);
+    display:flex;
+    align-items:center;
+    padding:12px 18px;
+    gap:10px;
+  }
+  .prompt{ color:var(--amber); font-size:13.5px; white-space:nowrap; font-family:'Orbitron', sans-serif; }
+  .inputbar input{
+    flex:1;
+    background:rgba(95,231,255,0.05);
+    border:1px solid var(--cyan-dim);
+    border-radius:4px;
+    outline:none;
+    color:var(--cyan);
+    font-family:inherit;
+    font-size:13.5px;
+    caret-color:var(--cyan);
+    padding:8px 10px;
+  }
+  .inputbar input::placeholder{ color:rgba(95,231,255,0.3); }
+  .sendbtn{
+    background:linear-gradient(135deg, rgba(95,231,255,0.15), rgba(138,123,255,0.15));
+    border:1px solid var(--cyan);
+    color:var(--cyan);
+    font-family:'Orbitron', sans-serif;
+    font-size:11px;
+    letter-spacing:1.5px;
+    padding:9px 16px;
+    border-radius:4px;
+    cursor:pointer;
+  }
+  .sendbtn:hover{ box-shadow:0 0 14px rgba(95,231,255,0.4); }
+
+  .footer{
+    position:relative; z-index:2;
+    font-size:10.5px;
+    color:var(--cyan-dim);
+    padding:8px 6px 0;
+    display:flex;
+    justify-content:space-between;
+    letter-spacing:1px;
+    font-family:'Orbitron', sans-serif;
+  }
+</style>
+</head>
+<body>
+<div id="stars"><canvas id="starsCanvas"></canvas></div>
+<div class="nebula"></div>
+
+<div class="wrap">
+
+  <div class="titlebar">
+    <div class="brand">✦ AGENT // MISSION CONTROL</div>
+    <div class="status"><span class="pulse"></span>ORBIT LOCKED</div>
+  </div>
+
+  <div class="term">
+    <div class="log" id="log"></div>
+    <div class="inputbar">
+      <span class="prompt">&gt;</span>
+      <input id="input" type="text" placeholder="transmit a message to the agent..." autocomplete="off" />
+      <button class="sendbtn" id="sendBtn">TRANSMIT</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span id="endpointLabel">SIGNAL: /chat</span>
+    <span id="clock"></span>
+  </div>
+
+</div>
+
+<script>
+// starfield background
+(function(){
+  const canvas = document.getElementById('starsCanvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, stars = [];
+
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  for(let i=0;i<180;i++){
+    stars.push({
+      x: Math.random()*w,
+      y: Math.random()*h,
+      r: Math.random()*1.4 + 0.3,
+      s: Math.random()*0.5 + 0.15,
+      tw: Math.random()*Math.PI*2
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(const st of stars){
+      st.tw += 0.02;
+      const alpha = 0.4 + Math.sin(st.tw)*0.4;
+      ctx.beginPath();
+      ctx.arc(st.x, st.y, st.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+      ctx.fill();
+      st.y += st.s;
+      if(st.y > h){ st.y = 0; st.x = Math.random()*w; }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ---------- CONFIG ----------
+const API_ENDPOINT = "/chat";
+
+const log = document.getElementById('log');
+const input = document.getElementById('input');
+const sendBtn = document.getElementById('sendBtn');
+const clock = document.getElementById('clock');
+
+function ts(){ return new Date().toTimeString().slice(0,8); }
+
+function appendLine(html){
+  const div = document.createElement('div');
+  div.className = 'line';
+  div.innerHTML = html;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+  return div;
+}
+
+function you(text){
+  appendLine(`<span class="you"><span class="tag">[${ts()}] COMMANDER ~$</span> ${escapeHtml(text)}</span>`);
+}
+function agent(text){
+  appendLine(`<span class="agent"><span class="tag">[${ts()}] AGENT ~$</span> ${escapeHtml(text)}</span>`);
+}
+function toolStep(name, detail){
+  appendLine(`<span class="tool">  ↳ <span class="name">${escapeHtml(name)}</span>${detail ? ' :: ' + escapeHtml(detail) : ''}</span>`);
+}
+function errLine(text){
+  appendLine(`<span class="err">[${ts()}] ALERT :: ${escapeHtml(text)}</span>`);
+}
+function escapeHtml(s){
+  const div = document.createElement('div');
+  div.textContent = s;
+  return div.innerHTML;
+}
+
+const bootLines = [
+  "⟡ initializing propulsion core ...",
+  "⟡ loading config.py ................ OK",
+  "⟡ loading memory.py ................ OK",
+  "⟡ loading tools.py .................. OK",
+  "⟡ loading prompts.py ................ OK",
+  "⟡ syncing llm backend .............. OK",
+  "⟡ launching agent.py ................ OK",
+  ""
+];
+
+async function boot(){
+  for(const l of bootLines){
+    appendLine(`<span class="boot">${l}</span>`);
+    await sleep(100);
+  }
+  agent("systems nominal. transmit your message, commander.");
+}
+function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+async function sendMessage(){
+  const text = input.value.trim();
+  if(!text) return;
+  you(text);
+  input.value = "";
+
+  toolStep("uplink", "transmitting to agent runtime");
+
+  try{
+    const res = await fetch(API_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    });
+    if(!res.ok) throw new Error(`server responded ${res.status}`);
+
+    let data;
+    const raw = await res.text();
+    try{ data = JSON.parse(raw); } catch(e){ data = { response: raw }; }
+
+    if(Array.isArray(data.trace)){
+      for(const step of data.trace){
+        toolStep(step.tool || "tool", step.detail || "");
+        await sleep(120);
+      }
+    }
+    agent(data.response || data.output || raw || "(empty response)");
+
+  } catch(err){
+    errLine(err.message + " — is app.py running and reachable at " + API_ENDPOINT + "?");
+    agent("uplink lost. switching to offline simulation.");
+    demoEcho(text);
+  }
+}
+
+function demoEcho(text){
+  toolStep("parser.py", "parsed intent (sim)");
+  toolStep("memory.py", "no relevant context found (sim)");
+  setTimeout(()=> agent(`[sim mode] received: "${text}" — connect app.py for a live response.`), 250);
+}
+
+sendBtn.addEventListener('click', sendMessage);
+input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') sendMessage(); });
+
+function tickClock(){
+  clock.textContent = new Date().toTimeString().slice(0,8) + " :: SECTOR " + (100 + Math.floor(Math.random()*900));
+}
+setInterval(tickClock, 1000);
+tickClock();
+
+boot();
+input.focus();
+</script>
+</body>
+</html>
