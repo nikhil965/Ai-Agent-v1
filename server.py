@@ -1,3 +1,5 @@
+##Starts the backend server and handles incoming requests. It may also define API endpoints.
+
 """
 server.py — thin FastAPI wrapper around the existing Agent (agent.py)
 Drop this file in the SAME folder as agent.py, config.py, tools.py etc.
